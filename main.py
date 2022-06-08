@@ -1,16 +1,39 @@
 import yfinance as yf
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from flask import Flask
+from flask import Flask, request
+from Predictor import Predictor
 
 app = Flask(__name__)
+pred = Predictor()
 
 
-@app.route("/load_models", methods=['GET'])
+@app.route("/models/load", methods=['POST'])
 def load_models():
-    return "<p>Hello, World!</p>"
+    timeframe = request.get_json(force=True)["timeframe"]
+    res = pred.load(timeframe=timeframe)
+    return res
 
 
+@app.route("/models/recreate", methods=['POST'])
+def recreate():
+    timeframe = request.get_json(force=True)["timeframe"]
+    res = pred.create_models(timeframe=timeframe)
+    return res
+
+
+@app.route("/predict/next_close", methods=['GET'])
+def next_close():
+    timeframe = request.get_json(force=True)["timeframe"]
+    res = pred.next_close(timeframe)
+    return res
+
+@app.route("/predict/costume", methods=['GET'])
+def predict():
+    timeframe = request.get_json(force=True)["timeframe"]
+    data = request.get_json(force=True)["data"]
+    res = pred.predict(timeframe=timeframe, data=data)
+    return res
 # gold = yf.Ticker("AAPL")
 # data = gold.history(period="max", interval="1mo")
 # data.drop(["Dividends", "Stock Splits"], axis=1, inplace=True)
