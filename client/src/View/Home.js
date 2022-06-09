@@ -1,59 +1,38 @@
 import React, { useEffect, useState } from "react"
 import io from "socket.io-client";
+import DayFrame from "../Components/DayFrameComponent";
+import HourFrame from "../Components/HourFrameComponent";
+import MonthFrame from "../Components/MonthFrameComponent";
+import WeekFrame from "../Components/WeekFrameComponent";
+
 
 const endPoint = "http://localhost:5000";
 const socket = io.connect(`${endPoint}`);
 
 function Home(){
-    const [message, setMessage] = useState(null)
-    const [messages, setMessages] = useState([])
-    const [hour, setHour] = useState(null)
-
+    let content = null
     
-    let content = <p>{"Wait..."}</p>
-    useEffect(() => {
-        socket.on("success", (data) => {
-            console.log(data.data)
-        });
-   
-        socket.on("message", (msg) => {
-            let list = messages
-            list.push(msg.data)
-            setMessages(list)
-            let c = messages.map((msg) =>
-                <li key={msg}>{msg}</li>
-            )
-            console.log(msg);
-        });
-
-        socket.on("hour_data", (hourData) => {
-            setHour(hourData.message);
-        });
-        // setInterval(() => {
-        //     socket.emit('hour_data');
-        // }, 300);
-    }, [null])
-    
-    
-
-    const sendMessage = () => {
-        socket.emit("message", message)
-        document.getElementById("input_msg").value = ""
-    }
-
     content = 
-    <div>
-        <div>
-            <input type="text" id="input_msg" onChange={(e) => {setMessage(e.target.value)}}/>
-            <button id="send_btn" onClick={sendMessage}>send</button>
-        </div>
-        {(hour) ? (
-            <div>
-                <p>GB: {hour.gb}</p>
-                <p>LR: {hour.lr}</p>
-                <p>RF: {hour.rf}</p>
+    <div className="wrapper">
+        <div className="content-wrapper">
+            <div className="content-header my-5">
+                <div className="container-fluid">
+                    <div className="row mb-2">
+                    <div className="row ">
+                        <h1 className="m-0 bold title">Apple stocks predictor</h1>
+                    </div>
+                    </div>
+                </div>
             </div>
-        ) : ("Wait...")}
+            <section className="content mt-3">
+                <div className="container-fluid">
+                    <HourFrame socket={socket}/>
+                    <DayFrame socket={socket}/>
+                    <WeekFrame socket={socket}/>
+                    <MonthFrame socket={socket}/>
+                </div>
+            </section>
+        </div>        
     </div>
     return content
 }

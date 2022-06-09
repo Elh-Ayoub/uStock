@@ -132,7 +132,7 @@ class Predictor:
             "message": {"rf": rf_pred[0], "lr": lr_pred[0], "gb": gb_pred[0], "mean": mean},
             "timeframe": timeframe,
         }
-        return jsonify(response), 200
+        return response
 
     def save_loss(self, timeframe, model, pred, y_test):
         mse = mean_squared_error(y_test, pred)
