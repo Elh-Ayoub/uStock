@@ -113,7 +113,7 @@ class Predictor:
                     "message": {"rf": rf_pred[0], "lr": lr_pred[0], "gb": gb_pred[0], "mean": mean},
                     "timeframe": timeframe,
                     }
-        return jsonify(response), 200
+        return response
 
     def predict(self, timeframe, data):
         self.load(timeframe)
