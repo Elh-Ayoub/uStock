@@ -71,6 +71,8 @@ class Predictor:
         period = "max"
         if timeframe == "1D":
             period = "5y"
+        if timeframe == "1h":
+            period = "1y"
         data = apple.history(period=period, interval=timeframe)
         try:
             data.drop(["Dividends", "Stock Splits"], axis=1, inplace=True)
